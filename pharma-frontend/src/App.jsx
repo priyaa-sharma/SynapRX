@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
+import Landing from './pages/Landing';
 import Home from './pages/Home';
 import DrugDetail from './pages/DrugDetail';
 import Explorer from './pages/Explorer';
@@ -8,6 +10,12 @@ import History from './pages/History';
 import Ask from './pages/Ask';
 
 export default function App() {
+  const [entered, setEntered] = useState(false);
+
+  if (!entered) {
+    return <Landing onExplore={() => setEntered(true)} />;
+  }
+
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
       <Sidebar />

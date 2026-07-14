@@ -37,5 +37,5 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`PharmaLens API listening on http://localhost:${PORT}`);
+  console.log(`SynapRX API listening on http://localhost:${PORT}`);
 });

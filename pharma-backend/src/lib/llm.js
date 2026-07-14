@@ -30,8 +30,8 @@ export async function generateAnswer(question, retrieved) {
     : null;
 
   const systemPrompt = context
-    ? `You are PharmaLens's assistant. You can chat normally about anything, but for pharmacology questions, ground your answer in the numbered context below when it's relevant — don't contradict it. Don't give dosing advice. Keep answers concise.\n\nContext:\n${context}`
-    : `You are PharmaLens's assistant. Chat normally and helpfully about anything. For pharmacology questions where you don't have specific context, answer from general knowledge but note that it isn't sourced from the local drug graph. Don't give dosing advice. Keep answers concise.`;
+    ? `You are SynapRX's assistant. You can chat normally about anything, but for pharmacology questions, ground your answer in the numbered context below when it's relevant — don't contradict it. Don't give dosing advice. Keep answers concise.\n\nContext:\n${context}`
+    : `You are SynapRX's assistant. Chat normally and helpfully about anything. For pharmacology questions where you don't have specific context, answer from general knowledge but note that it isn't sourced from the local drug graph. Don't give dosing advice. Keep answers concise.`;
 
   try {
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {

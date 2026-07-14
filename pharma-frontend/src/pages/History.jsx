@@ -21,7 +21,7 @@ export default function History() {
           History timeline
         </h1>
         <p style={{ fontSize: 14, color: 'var(--text-secondary)', margin: '0 0 14px' }}>
-          Discovery and development milestones, oldest first.
+          Trace drug development from historical discovery to modern approval.
         </p>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <button

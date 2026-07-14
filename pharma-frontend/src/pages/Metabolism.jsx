@@ -32,7 +32,7 @@ export default function Metabolism() {
           CYP450 metabolism dashboard
         </h1>
         <p style={{ fontSize: 14, color: 'var(--text-secondary)', margin: 0 }}>
-          Which drugs share liver enzyme pathways — a hint at where metabolic competition happens.
+          Check which drugs share liver enzyme pathways.
         </p>
       </header>
 

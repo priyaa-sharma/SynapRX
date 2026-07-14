@@ -1,58 +1,70 @@
 import { NavLink } from 'react-router-dom';
 
 const navItems = [
-  { to: '/', label: 'Drugs', icon: '⬡', end: true },
-  { to: '/explorer', label: 'Explorer', icon: '◈' },
-  { to: '/metabolism', label: 'Metabolism', icon: '▦' },
-  { to: '/history', label: 'History', icon: '⌇' },
-  { to: '/ask', label: 'Ask', icon: '◐' },
+  { to: '/', label: 'Drugs', end: true },
+  { to: '/explorer', label: 'Explorer' },
+  { to: '/metabolism', label: 'Metabolism' },
+  { to: '/history', label: 'History' },
+  { to: '/ask', label: 'Ask' },
 ];
 
 export default function Sidebar() {
   return (
     <aside
       style={{
-        width: 210,
-        borderRight: '0.5px solid var(--border)',
-        padding: '20px 12px',
+        width: 220,
+        borderRight: '1px solid var(--border)',
+        padding: '28px 20px',
         display: 'flex',
         flexDirection: 'column',
         flexShrink: 0,
       }}
     >
-      <div style={{ padding: '0 8px', marginBottom: 28 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <svg width="22" height="14" viewBox="0 0 22 14" aria-hidden="true">
-            <circle cx="2" cy="7" r="2" fill="var(--accent)" />
-            <line x1="4" y1="7" x2="18" y2="7" stroke="var(--accent)" strokeWidth="1" opacity="0.4" />
-            <circle cx="20" cy="7" r="2" fill="var(--accent)">
-              <animate attributeName="cx" values="4;18;4" dur="3.2s" repeatCount="indefinite" />
-            </circle>
-          </svg>
-          <span style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 500, letterSpacing: '-0.01em' }}>
-            PharmaLens
+      <div style={{ marginBottom: 40 }}>
+        <div
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 15,
+            fontWeight: 300,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: 'var(--text-primary)',
+          }}
+        >
+          Synap
+        </div>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 0 }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 15,
+              fontWeight: 600,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: 'var(--accent-text)',
+            }}
+          >
+            RX
           </span>
         </div>
+        <div style={{ width: 28, height: 1, background: 'var(--accent)', marginTop: 6 }} />
       </div>
 
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <nav style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         {navItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             end={item.end}
             style={({ isActive }) => ({
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              padding: '9px 10px',
+              padding: '10px 12px',
               borderRadius: 'var(--radius)',
               fontSize: 14,
+              fontWeight: isActive ? 500 : 400,
               color: isActive ? 'var(--accent-text)' : 'var(--text-secondary)',
-              background: isActive ? 'var(--accent-dim)' : 'transparent',
+              background: isActive ? 'var(--surface-3)' : 'transparent',
             })}
           >
-            <span aria-hidden="true" style={{ fontSize: 13, width: 16, textAlign: 'center' }}>{item.icon}</span>
             {item.label}
           </NavLink>
         ))}
@@ -62,10 +74,12 @@ export default function Sidebar() {
 
       <div
         style={{
-          borderTop: '0.5px solid var(--border)',
-          paddingTop: 12,
-          fontSize: 12,
+          borderTop: '1px solid var(--border)',
+          paddingTop: 14,
+          fontSize: 11,
+          fontWeight: 300,
           color: 'var(--text-muted)',
+          lineHeight: 1.5,
         }}
       >
         Educational reference only. Not medical advice.

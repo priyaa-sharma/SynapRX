@@ -13,7 +13,7 @@ async def lifespan(app: FastAPI):
     await close_pool()
 
 
-app = FastAPI(title="PharmaLens API", lifespan=lifespan)
+app = FastAPI(title="SynapRX API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

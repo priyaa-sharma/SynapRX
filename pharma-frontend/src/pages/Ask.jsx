@@ -5,7 +5,7 @@ export default function Ask() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      text: 'Ask about a drug\'s mechanism, or ask why two drugs interact. Answers are grounded in the live drug graph, with sources cited below each response.',
+      text: 'Ask anything right away. The responses are grounded in the live drug graph, with sources cited below each response.',
       citations: [],
     },
   ]);
@@ -34,8 +34,8 @@ export default function Ask() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 80px)', maxWidth: 640 }}>
       <header style={{ marginBottom: 16 }}>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 500, margin: '0 0 4px' }}>Ask</h1>
-        <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: 0 }}>Grounded in the live drug graph</p>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 500, margin: '0 0 4px' }}>Have a query?</h1>
+
       </header>
 
       <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 14, paddingRight: 4 }}>

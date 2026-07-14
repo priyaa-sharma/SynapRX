@@ -5,9 +5,9 @@ import { useApi } from '../api/useApi';
 import RiskBadge from '../components/RiskBadge';
 
 const riskColor = {
-  contraindicated: '#e1544c',
-  caution: '#f0a857',
-  minor: '#6b7280',
+  contraindicated: '#c25a6b',
+  caution: '#c78a4a',
+  minor: '#a99ba0',
 };
 
 export default function Explorer() {
@@ -38,7 +38,7 @@ export default function Explorer() {
             Interaction explorer
           </h1>
           <p style={{ fontSize: 14, color: 'var(--text-secondary)', margin: 0 }}>
-            Pick a drug to see everything it interacts with, color-coded by risk.
+            Select a medication to see everything it interacts with.
           </p>
         </header>
         <div style={{ position: 'relative', maxWidth: 320 }}>

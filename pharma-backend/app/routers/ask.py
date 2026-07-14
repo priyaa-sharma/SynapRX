@@ -40,7 +40,7 @@ async def ask(payload: AskRequest):
             return {
                 "text": f"{drug['name']} ({drug['brand']}) is a {drug['class']}, approved {drug['approved']}. "
                         f"Primary mechanism: {mech_text or 'not recorded'}.",
-                "citations": [{"label": "PharmaLens drug graph"}],
+                "citations": [{"label": "SynapRX drug graph"}],
             }
 
         return {

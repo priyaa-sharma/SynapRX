@@ -18,7 +18,7 @@ async function buildDocuments() {
       content: `${d.name} is a ${d.class_name}, approved in ${d.approval_year || 'an unrecorded year'}. ${
         d.half_life_hours ? `Its half-life is approximately ${d.half_life_hours} hours.` : ''
       }`,
-      source: 'PharmaLens drug graph',
+      source: 'SynapRX drug graph',
     });
   }
   const { rows: mechanisms } = await pool.query('SELECT drug_id, target, action, notes FROM mechanisms');
@@ -30,7 +30,7 @@ async function buildDocuments() {
       category: 'mechanism',
       title: `${drug.name} mechanism: ${m.target}`,
       content: `${drug.name} acts on ${m.target} via ${m.action}. ${m.notes || ''}`.trim(),
-      source: 'PharmaLens drug graph',
+      source: 'SynapRX drug graph',
     });
   }
 
@@ -44,7 +44,7 @@ async function buildDocuments() {
       category: 'metabolism',
       title: `${drug.name} metabolism: ${m.enzyme}`,
       content: `${drug.name} is metabolized via ${m.enzyme}, acting as a ${strengthText}${m.role} of that enzyme. ${m.notes || ''}`.trim(),
-      source: 'PharmaLens drug graph',
+      source: 'SynapRX drug graph',
     });
   }
 
@@ -71,7 +71,7 @@ async function buildDocuments() {
       category: 'history',
       title: h.title,
       content: `${h.year_label}: ${h.title}. ${h.description}`,
-      source: 'PharmaLens drug graph',
+      source: 'SynapRX drug graph',
     });
   }
 

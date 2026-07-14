@@ -1,3 +1,8 @@
+// Thin fetch wrapper around the SynapRX backend API.
+// This replaces the old mock data.js — components now call these
+// functions (mostly via the useApi hook below) instead of importing
+// static arrays.
+
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 async function request(path) {

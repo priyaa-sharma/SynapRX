@@ -22,7 +22,7 @@ export default function Home() {
           Drug reference
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: 14, margin: 0 }}>
-          Mechanism, interactions, metabolism, and history — one page per drug.
+          Mechanism, interactions, metabolism, and history.
         </p>
       </header>
 

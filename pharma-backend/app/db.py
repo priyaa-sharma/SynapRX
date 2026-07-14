@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://localhost:5432/pharmalens",
+    "postgresql://localhost:5432/SynapRX",
 )
 
 _pool: asyncpg.Pool | None = None
