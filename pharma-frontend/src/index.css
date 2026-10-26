@@ -1,30 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&display=swap');
 
-body {
-  font-family: 'Space Grotesk', sans-serif;
-}
 :root {
-  --bg: #dcbac2b1;
-  --surface-1: #fff5f7;
-  --surface-2: #ffedf0;
-  --surface-3: #ffd1dc;
-  --border: #f2d9de;
-  --border-strong: #e8bdc7;
+  /* Honeycomb palette */
+  --bg: #fffef5;
+  --surface-1: #fffbe0;
+  --surface-2: #fffdd0;
+  --surface-3: #f9e076;
+  --border: #eadf9c;
+  --border-strong: #ffc107;
 
-  --text-primary: #4a3238;
-  --text-secondary: #8c6e76;
-  --text-muted: #b79aa2;
+  --text-primary: #3d2410;
+  --text-secondary: #7d5a3c;
+  --text-muted: #a88b6b;
 
-  --accent: #d46a85;
-  --accent-dim: #ffe3ea;
-  --accent-text: #b8506c;
+  --accent: #895129;
+  --accent-dim: #fcefaa;
+  --accent-text: #6e3f1d;
 
-  --danger: #c25a6b;
-  --danger-dim: #fbe3e7;
-  --warning: #c78a4a;
-  --warning-dim: #faf0dd;
-  --minor: #a99ba0;
-  --minor-dim: #f2ebed;
+  --danger: #b3472f;
+  --danger-dim: #fbe3d9;
+  --warning: #a8650b;
+  --warning-dim: #fdeccc;
+  --minor: #9a8f7a;
+  --minor-dim: #f1ecdc;
 
   --font-display: 'Manrope', -apple-system, sans-serif;
   --font-body: 'Manrope', -apple-system, sans-serif;
@@ -76,7 +74,7 @@ button:hover {
   border-color: var(--border-strong);
 }
 
-input[type="text"], input[type="search"] {
+input[type="text"], input[type="search"], input[type="password"] {
   background: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -86,7 +84,7 @@ input[type="text"], input[type="search"] {
   font-weight: 400;
 }
 
-input[type="text"]:focus, input[type="search"]:focus {
+input[type="text"]:focus, input[type="search"]:focus, input[type="password"]:focus {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
   border-color: var(--accent);
@@ -95,6 +93,21 @@ input[type="text"]:focus, input[type="search"]:focus {
 ::selection {
   background: var(--accent-dim);
 }
+
+/* Page entrance: each direct child of the page fades up in sequence */
+@keyframes pageRise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-enter > * {
+  animation: pageRise 0.55s ease-out backwards;
+}
+.page-enter > *:nth-child(2) { animation-delay: 0.08s; }
+.page-enter > *:nth-child(3) { animation-delay: 0.16s; }
+.page-enter > *:nth-child(4) { animation-delay: 0.24s; }
+.page-enter > *:nth-child(5) { animation-delay: 0.32s; }
+.page-enter > *:nth-child(n+6) { animation-delay: 0.4s; }
 
 @media (prefers-reduced-motion: reduce) {
   * {
