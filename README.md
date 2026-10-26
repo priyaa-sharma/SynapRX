@@ -10,6 +10,13 @@ A full-stack pharmacology reference platform. Explore drug mechanisms, interacti
 - **History timeline** — chronological view of drug discovery and development milestones
 - **Ask** — a conversational assistant with a custom-built RAG pipeline: TF-IDF retrieval over generated documents grounds pharmacology answers in real data, while general questions are handled conversationally via an LLM (Groq/Llama 3.3)
 
+
+## LIVE WORKING
+
+https://github.com/user-attachments/assets/a2ff30dc-07e7-4c9c-9849-ff50d39bf1f3
+
+
+
 ## Tech stack
 
 | Layer | Tech |
