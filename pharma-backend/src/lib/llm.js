@@ -1,4 +1,4 @@
-const MODEL = 'llama-3.3-70b-versatile';
+const MODEL = "openai/gpt-oss-120b";
 const RELEVANCE_THRESHOLD = 0.12;
 
 export async function generateAnswer(question, retrieved) {
