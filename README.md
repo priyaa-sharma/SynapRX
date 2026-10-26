@@ -1,4 +1,4 @@
-# PharmaLens
+# SYNAPRX
 
 A full-stack pharmacology reference platform. Explore drug mechanisms, interaction risk, CYP450 metabolism, and history, with a RAG-powered Q&A assistant grounded in the underlying data.
 
