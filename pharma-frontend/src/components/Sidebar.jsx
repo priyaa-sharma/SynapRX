@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 
 const navItems = [
   { to: '/', label: 'Drugs', end: true },
@@ -9,6 +11,22 @@ const navItems = [
 ];
 
 export default function Sidebar() {
+  const [signingOut, setSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState('');
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    setSignOutError('');
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) setSignOutError(error.message);
+    } catch (error) {
+      setSignOutError(error.message || 'Please try again.');
+    } finally {
+      setSigningOut(false);
+    }
+  }
+
   return (
     <aside
       style={{
@@ -71,6 +89,20 @@ export default function Sidebar() {
       </nav>
 
       <div style={{ flex: 1 }} />
+
+      {signOutError && (
+        <p role="alert" style={{ color: 'var(--danger)', fontSize: 11, lineHeight: 1.5 }}>
+          Could not sign out: {signOutError}
+        </p>
+      )}
+      <button
+        type="button"
+        onClick={handleSignOut}
+        disabled={signingOut}
+        style={{ width: '100%', marginBottom: 14 }}
+      >
+        {signingOut ? 'Signing out…' : 'Sign out'}
+      </button>
 
       <div
         style={{

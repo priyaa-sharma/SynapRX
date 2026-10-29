@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function Landing({ onExplore }) {
   return (
     <div
@@ -170,6 +172,13 @@ export default function Landing({ onExplore }) {
         Explore SynapRX
         <span className="arrow" aria-hidden="true">→</span>
       </button>
+      <Link
+        className="landing-auth-link rise"
+        to="/login"
+        style={{ animationDelay: '1.05s' }}
+      >
+        Sign in or create an account
+      </Link>
 
       <svg
         className="rise"
