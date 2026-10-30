@@ -6,7 +6,6 @@ const navItems = [
   { to: '/', label: 'Drugs', end: true },
   { to: '/explorer', label: 'Explorer' },
   { to: '/metabolism', label: 'Metabolism' },
-  { to: '/history', label: 'History' },
   { to: '/ask', label: 'Ask' },
 ];
 

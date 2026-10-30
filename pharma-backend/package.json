@@ -7,7 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "ingest": "node scripts/ingest.js"
+    "seed:expanded": "node scripts/seed-expanded.js",
+    "enrich:labels": "node scripts/enrich-labels.js",
+    "enrich:pharmacology": "node scripts/enrich-pharmacology.js",
+    "ingest": "node scripts/ingest.js",
+    "ingest:rxnorm": "node scripts/ingest-rxnorm.js"
   },
   "keywords": [],
   "author": "",

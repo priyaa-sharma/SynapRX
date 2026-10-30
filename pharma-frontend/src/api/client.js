@@ -26,6 +26,10 @@ export function fetchDrug(id) {
   return request(`/drugs/${encodeURIComponent(id)}`);
 }
 
+export function fetchDrugLabel(id) {
+  return request(`/drugs/${encodeURIComponent(id)}/label`);
+}
+
 export function fetchClasses() {
   return request('/classes');
 }
@@ -40,11 +44,6 @@ export function fetchMetabolism() {
 
 export function fetchMetabolismOverlaps() {
   return request('/metabolism/overlaps');
-}
-
-export function fetchHistory({ drugClass } = {}) {
-  const qs = drugClass ? `?class=${encodeURIComponent(drugClass)}` : '';
-  return request(`/history${qs}`);
 }
 
 export async function askQuestion(question) {

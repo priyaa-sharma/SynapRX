@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { pool } from '../db.js';
+import { getDrugLabel } from '../lib/drug-labels.js';
 
 const router = Router();
 
@@ -38,11 +39,38 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:id/label', async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT id
+       FROM drugs
+       WHERE id::text = $1 OR LOWER(name) = LOWER($1)
+       LIMIT 1`,
+      [req.params.id]
+    );
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Drug not found' });
+    }
+
+    const label = await getDrugLabel(rows[0].id);
+    if (!label) return res.status(404).json({ error: 'Drug not found' });
+    res.json(label);
+  } catch (err) {
+    console.error('Failed to fetch public drug label:', err);
+    if (err.code === '42P01') {
+      return res.status(503).json({
+        error: 'Drug label cache is not initialized. Run npm run seed:expanded in pharma-backend.',
+      });
+    }
+    res.status(502).json({ error: 'FDA/DailyMed drug information is currently unavailable.' });
+  }
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const drugResult = await pool.query(
-      `SELECT d.*, dc.name AS class_name
+      `SELECT d.*, dc.name AS class_name, dc.description AS class_description
        FROM drugs d
        JOIN drug_classes dc ON dc.id = d.class_id
        WHERE d.id::text = $1 OR LOWER(d.name) = LOWER($1)`,
@@ -65,6 +93,7 @@ router.get('/:id', async (req, res) => {
     res.json({
       ...drug,
       class: drug.class_name,
+      class_description: drug.class_description,
       mechanisms: mechanisms.rows,
       metabolism: metabolism.rows,
       history: history.rows,

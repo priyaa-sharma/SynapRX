@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { fetchDrugs, fetchDrug, fetchInteractionsFor } from '../api/client';
+import { useState } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { fetchDrugs, fetchDrug, fetchDrugLabel, fetchInteractionsFor } from '../api/client';
 import { useApi } from '../api/useApi';
 import RiskBadge from '../components/RiskBadge';
 
@@ -16,21 +16,42 @@ export default function Explorer() {
   const [query, setQuery] = useState('');
   const [selectedPair, setSelectedPair] = useState(null);
 
-  const { data: centerDrug } = useApi(
+  const { data: centerDrug, loading: drugLoading, error: drugError } = useApi(
     () => (id ? fetchDrug(id) : Promise.resolve(null)),
     [id]
   );
-  const { data: centerInteractions } = useApi(
-    () => (id ? fetchInteractionsFor(id) : Promise.resolve([])),
-    [id]
+  const {
+    data: centerInteractions,
+    loading: interactionsLoading,
+    error: interactionsError,
+  } = useApi(
+    () => (centerDrug ? fetchInteractionsFor(centerDrug.id) : Promise.resolve([])),
+    [centerDrug?.id]
   );
-
+  const { data: centerLabel, loading: labelLoading, error: labelError } = useApi(
+    () => (centerDrug ? fetchDrugLabel(centerDrug.id) : Promise.resolve(null)),
+    [centerDrug?.id]
+  );
   const { data: suggestions } = useApi(
     () => (query ? fetchDrugs({ search: query }) : Promise.resolve([])),
     [query]
   );
+  const {
+    data: catalog,
+    loading: catalogLoading,
+    error: catalogError,
+  } = useApi(
+    () => (id ? Promise.resolve([]) : fetchDrugs()),
+    [id]
+  );
+  const catalogGroups = (catalog || []).reduce((groups, drug) => {
+    const group = groups.find((item) => item.name === drug.class);
+    if (group) group.drugs.push(drug);
+    else groups.push({ name: drug.class, drugs: [drug] });
+    return groups;
+  }, []);
 
-  if (!id || !centerDrug) {
+  if (!id || (!centerDrug && drugLoading)) {
     return (
       <div>
         <header style={{ marginBottom: 24 }}>
@@ -38,13 +59,14 @@ export default function Explorer() {
             Interaction explorer
           </h1>
           <p style={{ fontSize: 14, color: 'var(--text-secondary)', margin: 0 }}>
-            Select a medication to see everything it interacts with.
+            Select a medication to see recorded interaction pairs. This is not a complete interaction checker.
           </p>
         </header>
         <div style={{ position: 'relative', maxWidth: 320 }}>
           <input
             type="search"
             placeholder="Search a drug, e.g. sertraline"
+            aria-label="Search a drug"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             style={{ width: '100%' }}
@@ -64,17 +86,85 @@ export default function Explorer() {
               }}
             >
               {suggestions.slice(0, 6).map((d) => (
-                <div
+                <button
                   key={d.id}
-                  onClick={() => navigate(`/explorer/${d.id}`)}
-                  style={{ padding: '9px 12px', fontSize: 13, cursor: 'pointer' }}
+                  type="button"
+                  onClick={() => {
+                    setQuery('');
+                    navigate(`/explorer/${d.id}`);
+                  }}
+                  style={{ display: 'block', width: '100%', border: 0, borderRadius: 0, padding: '9px 12px', textAlign: 'left', fontSize: 13 }}
                 >
                   {d.name}
-                </div>
+                </button>
               ))}
             </div>
           )}
         </div>
+        <section style={{ marginTop: 32, maxWidth: 900 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 12 }}>
+            <div>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 500, margin: '0 0 4px' }}>
+                Browse medications
+              </h2>
+              <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: 0 }}>
+                Choose a medication to view its recorded interaction pairs.
+              </p>
+            </div>
+            {!catalogLoading && !catalogError && catalog && (
+              <span style={{ flexShrink: 0, color: 'var(--text-muted)', fontSize: 12 }}>
+                {catalog.length} {catalog.length === 1 ? 'drug' : 'drugs'}
+              </span>
+            )}
+          </div>
+          {catalogLoading && (
+            <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>Loading the medication catalog…</p>
+          )}
+          {catalogError && (
+            <p role="alert" style={{ fontSize: 13, color: 'var(--danger)' }}>
+              Could not load the medication catalog ({catalogError}).
+            </p>
+          )}
+          {!catalogLoading && !catalogError && catalogGroups.length === 0 && (
+            <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>No medications are available to browse.</p>
+          )}
+          {!catalogLoading && !catalogError && catalogGroups.length > 0 && (
+            <div style={{ maxHeight: 420, overflowY: 'auto', paddingRight: 8 }}>
+              {catalogGroups.map((group) => (
+                <section key={group.name} style={{ marginBottom: 18 }}>
+                  <h3 style={{ margin: '0 0 8px', color: 'var(--text-muted)', fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                    {group.name}
+                  </h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 8 }}>
+                    {group.drugs.map((drug) => (
+                      <button
+                        key={drug.id}
+                        type="button"
+                        onClick={() => navigate(`/explorer/${drug.id}`)}
+                        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, textAlign: 'left' }}
+                      >
+                        <span>{drug.name}</span>
+                        <span aria-hidden="true" style={{ color: 'var(--text-muted)' }}>›</span>
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
+    );
+  }
+
+  if (drugError || !centerDrug) {
+    return (
+      <div>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 500 }}>Interaction explorer</h1>
+        <p role="alert" style={{ fontSize: 14, color: 'var(--danger)' }}>
+          {drugError ? `Could not load this drug (${drugError}).` : `No drug found for "${id}".`}
+        </p>
+        <button onClick={() => navigate('/explorer')}>Choose another drug</button>
       </div>
     );
   }
@@ -155,21 +245,84 @@ export default function Explorer() {
             ))}
           </svg>
 
-          {n === 0 && (
+          {interactionsLoading && (
             <p style={{ fontSize: 13, color: 'var(--text-muted)', textAlign: 'center' }}>
-              No recorded interactions for {centerDrug.name} yet.
+              Loading recorded interaction data…
             </p>
           )}
 
-          <div style={{ display: 'flex', gap: 16, fontSize: 12, color: 'var(--text-secondary)', padding: '0 8px' }}>
-            <span><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: riskColor.contraindicated, marginRight: 5 }} />Contraindicated</span>
-            <span><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: riskColor.caution, marginRight: 5 }} />Caution</span>
-            <span><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: riskColor.minor, marginRight: 5 }} />Minor</span>
-          </div>
+          {interactionsError && (
+            <p role="alert" style={{ fontSize: 13, color: 'var(--danger)', textAlign: 'center' }}>
+              Could not load interaction records ({interactionsError}).
+            </p>
+          )}
+
+          {!interactionsLoading && !interactionsError && n === 0 && (
+            <div style={{ maxWidth: 460, margin: '8px auto 16px', padding: 14, background: 'var(--surface-2)', borderRadius: 'var(--radius)' }}>
+              <p style={{ fontSize: 14, fontWeight: 500, margin: '0 0 6px', textAlign: 'center' }}>
+                No pairwise interactions are recorded for {centerDrug.name}
+              </p>
+              <p style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--text-secondary)', margin: 0, textAlign: 'center' }}>
+                This means the database has no curated interaction pairs for this drug. It does not mean the drug has no interactions.
+              </p>
+            </div>
+          )}
+
+          {n > 0 && (
+            <div style={{ display: 'flex', gap: 16, fontSize: 12, color: 'var(--text-secondary)', padding: '0 8px' }}>
+              <span><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: riskColor.contraindicated, marginRight: 5 }} />Contraindicated</span>
+              <span><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: riskColor.caution, marginRight: 5 }} />Caution</span>
+              <span><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: riskColor.minor, marginRight: 5 }} />Minor</span>
+            </div>
+          )}
         </div>
 
         <div style={{ width: 240, borderLeft: '0.5px solid var(--border)', padding: 20 }}>
-          {!selectedPair && (
+          {!selectedPair && n === 0 && (
+            <div>
+              <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '0 0 8px' }}>Interaction data</p>
+              <p style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--text-secondary)', margin: '0 0 12px' }}>
+                {interactionsError
+                  ? 'Interaction records could not be retrieved.'
+                  : 'Only curated drug-pair records appear as connections in this graph.'}
+              </p>
+              {labelLoading && (
+                <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>Checking the product label…</p>
+              )}
+              {labelError && (
+                <p role="status" style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                  Product-label interaction text could not be loaded.
+                </p>
+              )}
+              {centerLabel?.sections?.find((section) => section.key === 'drug_interactions') && (
+                <>
+                  <p style={{ fontSize: 12, fontWeight: 500, margin: '0 0 6px' }}>
+                    Product-label interaction text
+                  </p>
+                  <p style={{ maxHeight: 420, overflowY: 'auto', fontSize: 12, lineHeight: 1.6, color: 'var(--text-secondary)', margin: '0 0 8px', whiteSpace: 'pre-wrap' }}>
+                    {centerLabel.sections.find((section) => section.key === 'drug_interactions').content.slice(0, 3000)}
+                  </p>
+                  {centerLabel.sections.find((section) => section.key === 'drug_interactions').truncated && (
+                    <p style={{ fontSize: 11, color: 'var(--text-muted)' }}>Showing the beginning of a longer label section.</p>
+                  )}
+                  {centerLabel.sourceUrl && (
+                    <a href={centerLabel.sourceUrl} target="_blank" rel="noreferrer" style={{ fontSize: 12 }}>
+                      View source label
+                    </a>
+                  )}
+                </>
+              )}
+              {centerLabel && !centerLabel.sections?.some((section) => section.key === 'drug_interactions') && (
+                <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                  No interaction section was returned in the matched product label.
+                </p>
+              )}
+              <Link to={`/drug/${centerDrug.id}`} style={{ display: 'block', marginTop: 16, fontSize: 12 }}>
+                View full drug profile
+              </Link>
+            </div>
+          )}
+          {!selectedPair && n > 0 && (
             <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>
               Click a node to see the interaction detail.
             </p>

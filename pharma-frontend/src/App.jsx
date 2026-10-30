@@ -7,7 +7,6 @@ import Home from './pages/Home';
 import DrugDetail from './pages/DrugDetail';
 import Explorer from './pages/Explorer';
 import Metabolism from './pages/Metabolism';
-import History from './pages/History';
 import Ask from './pages/Ask';
 import AuthPage from './pages/AuthPage';
 
@@ -77,7 +76,7 @@ export default function App() {
             <Route path="/explorer" element={<Explorer />} />
             <Route path="/explorer/:id" element={<Explorer />} />
             <Route path="/metabolism" element={<Metabolism />} />
-            <Route path="/history" element={<History />} />
+            <Route path="/history" element={<Navigate to="/" replace />} />
             <Route path="/ask" element={<Ask />} />
           </Routes>
         </div>
